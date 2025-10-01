@@ -1,0 +1,165 @@
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+11:31:13 AM [express] serving on port 5000
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+Processing PDF upload: NHAI-AI-Engineer-Notification-2025.pdf
+Processing PDF file with buffer length: 651227
+pdf-parse failed, trying alternative approach: require is not defined
+Successfully extracted PDF content: NHAI-AI-Engineer-Notification-2025.pdf, Text length: 22698, Pages: 1
+Processed PDF: NHAI-AI-Engineer-Notification-2025.pdf, Final text length: 22698
+Created 1 text chunks for document
+11:38:31 AM [express] POST /api/documents/upload 200 in 26895ms :: {"success":true,"document":{"id":"…
+11:38:31 AM [express] GET /api/documents/e925c79a-ddb2-49b0-a510-da4ae71fc2ac 200 in 6ms :: {"documen…
+11:38:32 AM [express] GET /api/documents/e925c79a-ddb2-49b0-a510-da4ae71fc2ac/messages 200 in 1ms :: …
+11:38:34 AM [express] GET /api/documents/e925c79a-ddb2-49b0-a510-da4ae71fc2ac/pdf 200 in 2ms
+Processing PDF upload: NHAI-AI-Engineer-Notification-2025.pdf
+Processing PDF file with buffer length: 651227
+pdf-parse failed, trying alternative approach: require is not defined
+Successfully extracted PDF content: NHAI-AI-Engineer-Notification-2025.pdf, Text length: 22698, Pages: 1
+Processed PDF: NHAI-AI-Engineer-Notification-2025.pdf, Final text length: 22698
+Created 1 text chunks for document
+11:39:50 AM [express] POST /api/documents/upload 200 in 20498ms :: {"success":true,"document":{"id":"…
+11:39:50 AM [express] GET /api/documents/e35df527-5a23-4b27-8d7c-0a726f9a4f98 200 in 7ms :: {"documen…
+11:39:51 AM [express] GET /api/documents/e35df527-5a23-4b27-8d7c-0a726f9a4f98/messages 200 in 1ms :: …
+11:39:53 AM [express] GET /api/documents/e35df527-5a23-4b27-8d7c-0a726f9a4f98/pdf 200 in 1ms
+Processing chat message for document e35df527-5a23-4b27-8d7c-0a726f9a4f98: give me the summary
+No query-specific chunks found, returning first chunks for context
+Returning context with 1 chunks, total length: 22698
+Defaulting to 'auto' which will select the first provider available for the model, sorted by the user's order in https://hf.co/settings/inference-providers.
+Auto selected provider: cerebras
+Error generating chat response: InferenceClientProviderApiError: Failed to perform inference: an HTTP error occurred when requesting the provider
+    at innerRequest (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/utils/request.js:62:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async chatCompletion (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/tasks/nlp/chatCompletion.js:10:32)
+    at async HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:43:24)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27) {
+  httpRequest: {
+    url: 'https://router.huggingface.co/cerebras/v1/chat/completions',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': '@huggingface/inference/4.9.0'
+    },
+    body: {
+      messages: [Array],
+      max_tokens: 500,
+      temperature: 0.7,
+      model: 'llama3.1-8b'
+    }
+  },
+  httpResponse: { requestId: '', status: 401, body: '' }
+}
+Chat message error: Error: Failed to generate response from Hugging Face API
+    at HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27)
+11:40:06 AM [express] POST /api/documents/e35df527-5a23-4b27-8d7c-0a726f9a4f98/chat 500 in 249ms :: {…
+Processing chat message for document e35df527-5a23-4b27-8d7c-0a726f9a4f98: give me the summary
+No query-specific chunks found, returning first chunks for context
+Returning context with 1 chunks, total length: 22698
+Defaulting to 'auto' which will select the first provider available for the model, sorted by the user's order in https://hf.co/settings/inference-providers.
+Auto selected provider: cerebras
+Error generating chat response: InferenceClientProviderApiError: Failed to perform inference: an HTTP error occurred when requesting the provider
+    at innerRequest (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/utils/request.js:62:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async chatCompletion (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/tasks/nlp/chatCompletion.js:10:32)
+    at async HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:43:24)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27) {
+  httpRequest: {
+    url: 'https://router.huggingface.co/cerebras/v1/chat/completions',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': '@huggingface/inference/4.9.0'
+    },
+    body: {
+      messages: [Array],
+      max_tokens: 500,
+      temperature: 0.7,
+      model: 'llama3.1-8b'
+    }
+  },
+  httpResponse: { requestId: '', status: 401, body: '' }
+}
+Chat message error: Error: Failed to generate response from Hugging Face API
+    at HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27)
+11:40:18 AM [express] POST /api/documents/e35df527-5a23-4b27-8d7c-0a726f9a4f98/chat 500 in 77ms :: {"…
+Processing PDF upload: NHAI-AI-Engineer-Notification-2025.pdf
+Processing PDF file with buffer length: 651227
+pdf-parse failed, trying alternative approach: require is not defined
+Successfully extracted PDF content: NHAI-AI-Engineer-Notification-2025.pdf, Text length: 22698, Pages: 1
+Processed PDF: NHAI-AI-Engineer-Notification-2025.pdf, Final text length: 22698
+Created 1 text chunks for document
+11:49:05 AM [express] POST /api/documents/upload 200 in 1878ms :: {"success":true,"document":{"id":"e…
+11:49:06 AM [express] GET /api/documents/e1cc01d2-da9d-4101-8683-d38764d83699 200 in 11ms :: {"docume…
+11:49:07 AM [express] GET /api/documents/e1cc01d2-da9d-4101-8683-d38764d83699/messages 200 in 1ms :: …
+11:49:08 AM [express] GET /api/documents/e1cc01d2-da9d-4101-8683-d38764d83699/pdf 200 in 1ms
+Processing chat message for document e1cc01d2-da9d-4101-8683-d38764d83699: can you give us a short summary
+No query-specific chunks found, returning first chunks for context
+Returning context with 1 chunks, total length: 22698
+Defaulting to 'auto' which will select the first provider available for the model, sorted by the user's order in https://hf.co/settings/inference-providers.
+Auto selected provider: cerebras
+Error generating chat response: InferenceClientProviderApiError: Failed to perform inference: an HTTP error occurred when requesting the provider
+    at innerRequest (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/utils/request.js:62:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async chatCompletion (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/tasks/nlp/chatCompletion.js:10:32)
+    at async HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:43:24)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27) {
+  httpRequest: {
+    url: 'https://router.huggingface.co/cerebras/v1/chat/completions',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': '@huggingface/inference/4.9.0'
+    },
+    body: {
+      messages: [Array],
+      max_tokens: 500,
+      temperature: 0.7,
+      model: 'llama3.1-8b'
+    }
+  },
+  httpResponse: { requestId: '', status: 401, body: '' }
+}
+Chat message error: Error: Failed to generate response from Hugging Face API
+    at HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27)
+11:49:35 AM [express] POST /api/documents/e1cc01d2-da9d-4101-8683-d38764d83699/chat 500 in 81ms :: {"…
+Processing chat message for document e1cc01d2-da9d-4101-8683-d38764d83699: can you give us a short summary
+No query-specific chunks found, returning first chunks for context
+Returning context with 1 chunks, total length: 22698
+Defaulting to 'auto' which will select the first provider available for the model, sorted by the user's order in https://hf.co/settings/inference-providers.
+Auto selected provider: cerebras
+Error generating chat response: InferenceClientProviderApiError: Failed to perform inference: an HTTP error occurred when requesting the provider
+    at innerRequest (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/utils/request.js:62:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async chatCompletion (file:///home/runner/workspace/node_modules/@huggingface/inference/dist/esm/tasks/nlp/chatCompletion.js:10:32)
+    at async HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:43:24)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27) {
+  httpRequest: {
+    url: 'https://router.huggingface.co/cerebras/v1/chat/completions',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': '@huggingface/inference/4.9.0'
+    },
+    body: {
+      messages: [Array],
+      max_tokens: 500,
+      temperature: 0.7,
+      model: 'llama3.1-8b'
+    }
+  },
+  httpResponse: { requestId: '', status: 401, body: '' }
+}
+Chat message error: Error: Failed to generate response from Hugging Face API
+    at HuggingFaceService.generateChatResponse (/home/runner/workspace/server/huggingface.ts:62:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async <anonymous> (/home/runner/workspace/server/routes.ts:169:27)
+11:50:43 AM [express] POST /api/documents/e1cc01d2-da9d-4101-8683-d38764d83699/chat 500 in 68ms :: {"…
+^C

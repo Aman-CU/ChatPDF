@@ -1,0 +1,62 @@
+You are an experienced full-stack developer. Build me a project that works like ChatPDF. 
+
+The app should allow users to upload a PDF, chat with it, and get answers with citations. Use free/open-source resources.
+
+Requirements:
+
+1. Tech Stack
+   - Frontend: React + TailwindCSS for a clean, ChatPDF-like UI.
+   - Backend: Node.js + Express for API routes.
+   - PDF Parsing: Use pdf-parse or pdfjs-dist to extract text from uploaded PDFs.
+   - Embeddings: Use Hugging Face Inference embedding model (text-embedding-ada-002).
+   - Vector Search: Use FAISS (via the `faiss-node` or a simple JS wrapper; if not available, simulate with cosine similarity in-memory).
+   - LLM: Use Hugging Face Inference API for both embeddings + LLM responses.
+   - Storage: Store uploaded PDFs temporarily on disk (no cloud).
+   - Deployment: Local or Replit.
+
+2. Features
+   - Landing Page:
+     • Header with logo and links (Home, Dashboard).
+     • Hero section with "Chat with any PDF" headline.
+     • Drag-and-drop file upload box + Upload button.
+     • Option to try a sample PDF.
+   - Chat Interface (after upload):
+     • Two-column layout.
+       - Left: Document viewer showing uploaded PDF pages (use pdf.js).
+       - Right: Chat window with:
+         - User messages (right-aligned).
+         - AI answers (left-aligned) with citations like "Page 12".
+         - Scrollable chat history.
+         - Input box at bottom: "Ask a question about this PDF…" + send button.
+   - Backend API Endpoints:
+     • POST /upload → accepts PDF file, extracts text, chunks it, stores embeddings in FAISS (or in-memory vector store).
+     • POST /ask → accepts a user question, computes embedding, retrieves top-k chunks, sends them + question to GPT, returns JSON with answer + cited page numbers.
+   - FAQ Page: Accordion-style questions/answers.
+   - Footer: links (About, Privacy, Terms).
+
+3. Project Structure
+   - frontend/ → React + Tailwind code
+   - backend/
+     • server.js (Express app)
+     • routes/ (upload.js, ask.js)
+     • utils/ (PDF parser, chunker, embedding, FAISS setup or vector similarity search)
+   - models/ → embeddings storage (FAISS index or JSON file)
+   - data/ → uploaded PDFs
+   - package.json → dependencies for backend
+   - requirements.txt → for clarity include nothing (backend is Node only)
+   - README.md → setup instructions
+
+4. Implementation Notes
+   - Use multer for file uploads in Express.
+   - Use pdf-parse or pdfjs to extract text from PDF.
+   - Use Hugging Face Inference Node.js SDK for embeddings and LLM calls.
+   - Use simple chunking strategy: split text into ~500 tokens with overlap.
+   - Citations: return page number metadata with each chunk so LLM response can cite them.
+   - Don’t focus on scaling, just make it work for one user/document at a time.
+   - Keep code commented for learning purposes.
+
+5. Deliverables
+   - A working Express backend with /upload and /ask routes.
+   - A React + Tailwind frontend with ChatPDF-style UI.
+   - Example sample PDF included in data/ for demo.
+   - README.md with setup, how to run backend and frontend, and sample curl requests.
