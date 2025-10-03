@@ -3,6 +3,13 @@ import express from 'express';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { registerRoutes } from '../server/routes';
 
+// Vercel Function config
+export const config = {
+  runtime: 'nodejs20.x',
+  memory: 1024,
+  maxDuration: 10,
+};
+
 // Create an Express app and register the existing routes without starting a listener
 const app = express();
 app.use(express.json());
