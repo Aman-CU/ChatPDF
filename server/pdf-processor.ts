@@ -13,7 +13,6 @@ export interface ProcessedDocument {
     chunkIndex: number;
   }>;
 }
-
 export class PDFProcessor {
   /**
    * Process uploaded PDF file and extract text content
@@ -22,89 +21,63 @@ export class PDFProcessor {
     try {
       let textContent: string;
       let pageCount: number;
+      // LIGHT_PDF: fast path for constrained hosts (skips heavy parsing)
+      const lightMode = process.env.LIGHT_PDF === '1';
 
-      // Check if this is actually a text buffer (for sample documents) or a real PDF
-      if (filename.includes('sample') || originalName.includes('Demo')) {
-        // This is a text-based sample document
+      if (lightMode) {
+        textContent = `PDF Document: ${originalName}\n\n` +
+          `Light parsing mode is enabled on the server (LIGHT_PDF=1). ` +
+          `The original PDF was stored, and you can still chat using fallback context.`;
+        pageCount = 1;
+      } else if (filename.includes('sample') || originalName.includes('Demo')) {
+        // Text-based sample document
         textContent = file.toString('utf-8');
         pageCount = 1;
         console.log(`Processed sample text document: ${originalName}, Text length: ${textContent.length}`);
       } else {
-        // This is a real PDF file - extract text using pdfjs-dist
+        // Real PDF: try extracting with pdfjs
         console.log('Processing PDF file with buffer length:', file.length);
-        
         try {
-          // Use pdfjs-dist legacy build for Node.js environment
           const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
-          
-          // Convert Buffer to Uint8Array as required by pdfjs-dist
           const uint8Array = new Uint8Array(file);
-          
-          // Load the PDF document
           const loadingTask = pdfjsLib.getDocument({ data: uint8Array });
           const pdfDocument = await loadingTask.promise;
-          
           pageCount = pdfDocument.numPages;
           let fullText = '';
-          
-          // Extract text from each page
           for (let pageNum = 1; pageNum <= pageCount; pageNum++) {
             const page = await pdfDocument.getPage(pageNum);
-            const textContent = await page.getTextContent();
-            const pageText = textContent.items
-              .map((item: any) => item.str)
-              .join(' ');
+            const t = await page.getTextContent();
+            const pageText = (t.items as any[]).map((it: any) => it.str).join(' ');
             fullText += pageText + '\n\n';
           }
-          
           textContent = fullText.trim();
-          
           console.log(`Successfully extracted PDF content: ${originalName}, Text length: ${textContent.length}, Pages: ${pageCount}`);
-          
-          // If no text was extracted, provide a helpful message
           if (!textContent || textContent.trim().length === 0) {
-            textContent = `PDF Document: ${originalName}\n\nThis PDF appears to be image-based or contains no extractable text. Please try uploading a text-based PDF or use the "Try Sample Document" feature to test the chat functionality.`;
+            textContent = `PDF Document: ${originalName}\n\nThis PDF appears to be image-based or contains no extractable text.`;
             pageCount = 1;
           }
         } catch (pdfError) {
           console.error('Error parsing PDF:', pdfError);
-          // Create a more detailed fallback that still allows chat to work
-          textContent = `PDF Document Analysis: ${originalName}
-
-This appears to be a PDF document that contains text content, but we encountered technical difficulties extracting the text automatically. 
-
-Based on the file name "NHAI-AI-Engineer-Notification-2025.pdf", this seems to be:
-- A notification document from NHAI (National Highways Authority of India)
-- Related to AI Engineer positions or requirements
-- Published in 2025
-
-To get the best results, you could:
-1. Try uploading the document again
-2. Use the "Try Sample Document" feature to test the chat functionality
-3. If possible, copy and paste the text content directly in the chat
-
-I can still help answer questions about NHAI, AI engineering positions, or general document-related queries based on the context.`;
+          textContent = `PDF Document Analysis: ${originalName}\n\n` +
+            `We encountered technical difficulties extracting the text automatically. ` +
+            `You can still chat with a fallback context or try a different PDF.`;
           pageCount = 1;
         }
-        
         console.log(`Processed PDF: ${originalName}, Final text length: ${textContent.length}`);
       }
 
-      // Create document record
+      // Persist document
       const insertDocument: InsertDocument = {
         filename,
         originalName,
         textContent,
         pageCount: pageCount.toString(),
-        pdfData: file.toString('base64'), // Store PDF as base64
+        pdfData: file.toString('base64'),
       };
-
       const document = await storage.createDocument(insertDocument);
 
-      // Chunk the text for better processing
+      // Chunk and store
       const chunks = this.chunkText(textContent, pageCount);
-      
-      // Store text chunks
       for (let i = 0; i < chunks.length; i++) {
         const chunk = chunks[i];
         const insertChunk: InsertTextChunk = {
@@ -112,7 +85,7 @@ I can still help answer questions about NHAI, AI engineering positions, or gener
           content: chunk.content,
           pageNumber: chunk.pageNumber.toString(),
           chunkIndex: i.toString(),
-          embedding: null, // We'll implement embeddings later if needed
+          embedding: null,
         };
         await storage.createTextChunk(insertChunk);
       }
