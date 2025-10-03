@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
+import fs from 'fs';
+import path from 'path';
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -67,7 +69,14 @@ app.use((req, res, next) => {
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
-    serveStatic(app);
+    // In production on Render, we may not ship the built client.
+    // Only serve static if client/dist exists; otherwise, run API-only.
+    const distPath = path.resolve(import.meta.dirname, "..", "client", "dist");
+    if (fs.existsSync(distPath)) {
+      serveStatic(app);
+    } else {
+      log(`client/dist not found at ${distPath}; continuing with API-only server`, 'express');
+    }
   }
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
