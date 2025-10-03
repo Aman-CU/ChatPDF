@@ -13,6 +13,19 @@ async function ensureInitialized() {
   if (!initialized) {
     // registerRoutes returns an http.Server but does not bind; we can ignore the return value
     await registerRoutes(app);
+    // JSON error handler to normalize errors from routes and multer
+    // Must be added after routes
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    app.use((err: any, _req: any, res: any, _next: any) => {
+      // Handle Multer file size errors explicitly
+      if (err && (err.name === 'MulterError') && err.code === 'LIMIT_FILE_SIZE') {
+        return res.status(413).json({ error: 'File too large. Max 4MB.' });
+      }
+
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || 'Internal Server Error';
+      res.status(status).json({ error: message });
+    });
     initialized = true;
   }
 }

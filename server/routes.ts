@@ -12,7 +12,7 @@ import { generateSamplePDFContent } from "./sample-pdf";
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 4 * 1024 * 1024, // 4MB limit (compatible with Vercel serverless)
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype === 'application/pdf') {

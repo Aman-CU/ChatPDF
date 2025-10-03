@@ -80,16 +80,16 @@ export default function FileUpload({ onFileSelect, selectedFile, isUploading = f
             <div className="p-4 rounded-full bg-primary/10">
               <Upload className="h-8 w-8 text-primary" />
             </div>
-            
+
             <div className="space-y-2">
               <h3 className="text-lg font-medium text-foreground">
                 Drop your PDF here or click to browse
               </h3>
               <p className="text-sm text-muted-foreground">
-                Supports PDF files up to 50MB
+                Supports PDF files up to 4MB on Vercel
               </p>
             </div>
-            
+
             <Button variant="outline" data-testid="button-browse-files">
               Browse Files
             </Button>

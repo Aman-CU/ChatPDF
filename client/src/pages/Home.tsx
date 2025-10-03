@@ -26,7 +26,13 @@ export default function Home() {
       });
       
       if (!response.ok) {
-        const error = await response.json();
+        const raw = await response.text();
+        let error;
+        try {
+          error = JSON.parse(raw);
+        } catch {
+          error = { error: raw };
+        }
         throw new Error(error.error || 'Upload failed');
       }
       
@@ -52,14 +58,6 @@ export default function Home() {
     },
   });
 
-  const handleFileSelect = (file: File | null) => {
-    setSelectedFile(file);
-    if (file) {
-      console.log("Uploading file:", file.name);
-      uploadMutation.mutate(file);
-    }
-  };
-
   // Sample document mutation
   const sampleMutation = useMutation({
     mutationFn: async () => {
@@ -71,7 +69,13 @@ export default function Home() {
       });
       
       if (!response.ok) {
-        const error = await response.json();
+        const raw = await response.text();
+        let error;
+        try {
+          error = JSON.parse(raw);
+        } catch {
+          error = { error: raw };
+        }
         throw new Error(error.error || 'Failed to create sample document');
       }
       
@@ -95,6 +99,15 @@ export default function Home() {
       });
     },
   });
+
+  // Handle file selection from FileUpload
+  const handleFileSelect = (file: File | null) => {
+    setSelectedFile(file);
+    if (file) {
+      console.log("Uploading file:", file.name);
+      uploadMutation.mutate(file);
+    }
+  };
 
   const handleSamplePDF = () => {
     console.log("Creating sample document");
