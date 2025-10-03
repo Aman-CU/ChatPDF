@@ -38,12 +38,13 @@ export class MemStorage implements IStorage {
   // Document operations
   async createDocument(insertDocument: InsertDocument): Promise<Document> {
     const id = randomUUID();
+    // Exclude possibly-undefined pdfData from the spread, then set explicitly
+    const { pdfData, ...rest } = insertDocument as any;
     const document: Document = { 
-      ...insertDocument, 
+      ...rest, 
       id, 
       uploadedAt: new Date(),
-      // Ensure pdfData matches 'string | null' (never undefined)
-      pdfData: (insertDocument as any).pdfData ?? null,
+      pdfData: (pdfData ?? null) as string | null,
     };
     this.documents.set(id, document);
     return document;
