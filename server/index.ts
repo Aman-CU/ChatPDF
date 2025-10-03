@@ -73,7 +73,10 @@ app.use((req, res, next) => {
     const message = err.message || "Internal Server Error";
 
     res.status(status).json({ message });
-    throw err;
+    // Log but do not throw after responding; avoid crashing the process
+    try {
+      log(`Unhandled error: ${message}`, 'express');
+    } catch {}
   });
 
   // importantly only setup vite in development and after
