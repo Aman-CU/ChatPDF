@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { MessageSquare, Zap, Shield, FileText, Loader2 } from "lucide-react";
 
 export default function Home() {
+  const API_BASE = (import.meta as any).env?.VITE_API_URL || '';
+  const api = (path: string) => (API_BASE ? `${API_BASE}${path}` : path);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -20,7 +22,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append('pdf', file);
       
-      const response = await fetch('/api/documents/upload', {
+      const response = await fetch(api('/api/documents/upload'), {
         method: 'POST',
         body: formData,
       });
@@ -61,7 +63,7 @@ export default function Home() {
   // Sample document mutation
   const sampleMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/documents/sample', {
+      const response = await fetch(api('/api/documents/sample'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

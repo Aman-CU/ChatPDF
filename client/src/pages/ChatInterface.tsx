@@ -21,10 +21,10 @@ interface ChatData {
 
 interface Document {
   id: string;
-  filename: string;
   originalName: string;
-  pageCount: number;
+  pageCount: string; // returned as string from API; we parseInt when needed
   uploadedAt: string;
+  textContent: string;
 }
 
 export default function ChatInterface() {
@@ -32,6 +32,8 @@ export default function ChatInterface() {
   const [documentId, setDocumentId] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const API_BASE = (import.meta as any).env?.VITE_API_URL || '';
+  const api = (path: string) => (API_BASE ? `${API_BASE}${path}` : path);
 
   // Get document ID from URL params
   useEffect(() => {
@@ -63,7 +65,7 @@ export default function ChatInterface() {
   // Send chat message mutation
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
-      const response = await fetch(`/api/documents/${documentId}/chat`, {
+      const response = await fetch(api(`/api/documents/${documentId}/chat`), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

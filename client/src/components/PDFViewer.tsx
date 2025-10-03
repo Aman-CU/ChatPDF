@@ -16,7 +16,8 @@ export default function PDFViewer({ file, documentName, pageCount = 0, documentC
   const [currentPage, setCurrentPage] = useState(1);
   const [zoomLevel, setZoomLevel] = useState(100);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-
+  const API_BASE = (import.meta as any).env?.VITE_API_URL || '';
+  const api = (path: string) => (API_BASE ? `${API_BASE}${path}` : path);
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
@@ -50,7 +51,7 @@ export default function PDFViewer({ file, documentName, pageCount = 0, documentC
       return () => URL.revokeObjectURL(url);
     } else if (documentId) {
       // For stored documents, use API endpoint
-      const apiUrl = `/api/documents/${documentId}/pdf`;
+      const apiUrl = api(`/api/documents/${documentId}/pdf`);
       setPdfUrl(apiUrl);
     } else {
       setPdfUrl(null);
