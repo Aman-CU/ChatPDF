@@ -41,7 +41,9 @@ export class MemStorage implements IStorage {
     const document: Document = { 
       ...insertDocument, 
       id, 
-      uploadedAt: new Date() 
+      uploadedAt: new Date(),
+      // Ensure pdfData matches 'string | null' (never undefined)
+      pdfData: (insertDocument as any).pdfData ?? null,
     };
     this.documents.set(id, document);
     return document;
