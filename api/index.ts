@@ -5,7 +5,7 @@ import { registerRoutes } from '../server/routes';
 
 // Vercel Function config
 export const config = {
-  runtime: 'nodejs20.x',
+  runtime: 'nodejs',
   memory: 1024,
   maxDuration: 10,
 };
