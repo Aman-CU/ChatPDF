@@ -9,14 +9,27 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Basic CORS for separating frontend (Vercel) and backend (Render)
-const allowedOrigin = process.env.FRONTEND_ORIGIN || "*";
+// Robust CORS for separating frontend (Vercel) and backend (Render)
+// FRONTEND_ORIGIN can be a single origin or a comma-separated list.
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
-  res.header("Vary", "Origin");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  if (req.method === "OPTIONS") {
+  const envVal = process.env.FRONTEND_ORIGIN?.trim();
+  const allowlist = envVal ? envVal.split(',').map(o => o.trim()).filter(Boolean) : [];
+  const reqOrigin = req.headers.origin as string | undefined;
+
+  // Allow all if no allowlist provided
+  if (!allowlist.length || allowlist.includes('*')) {
+    res.header('Access-Control-Allow-Origin', '*');
+  } else if (reqOrigin && allowlist.includes(reqOrigin)) {
+    res.header('Access-Control-Allow-Origin', reqOrigin);
+  }
+
+  res.header('Vary', 'Origin');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // We don't use cookies, but enabling credentials reflection is safe if needed later
+  // res.header('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
     return res.sendStatus(204);
   }
   next();
